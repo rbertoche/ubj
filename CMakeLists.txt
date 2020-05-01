@@ -12,7 +12,6 @@ add_subdirectory(tools)
 
 install(TARGETS ubj
         EXPORT ubjTargets
-	LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
 	PUBLIC_HEADER DESTINATION include
         )
