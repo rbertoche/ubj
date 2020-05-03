@@ -186,31 +186,42 @@ void ubjrw_write_dynamic(ubjw_context_t* ctx, ubjr_dynamic_t dobj,uint8_t optimi
 }
 
 #include<iostream>
+#include<fstream>
 
 static size_t write_os(const void* data, size_t size, size_t count, void* userdata)
 {
 	size_t n = size*count;
-	reinterpret_cast<std::ostream*>(userdata)->write(data, n);
+	reinterpret_cast<std::ostream*>(userdata)->write(static_cast<const char *>(data), n);
 	return n;
 }
-static void close_os(void* userdata)
+static int close_os(void* userdata)
 {
-	reinterpret_cast<std::ostream*>(userdata)->close();
+	auto stream = reinterpret_cast<std::ostream*>(userdata);
+	auto fstream = dynamic_cast<std::ofstream*>(stream);
+	if (fstream) {
+		fstream->close();
+	}
+	return 0;
 }
 
 static size_t read_is(void* data, size_t size, size_t count, void* userdata)
 {
 	size_t n = size*count;
-	reinterpret_cast<std::istream*>(userdata)->read(data, n);
+	reinterpret_cast<std::istream*>(userdata)->read(reinterpret_cast<char*>(data), n);
 	return n;
 }
 static int peek_is(void* userdata)
 {
 	return reinterpret_cast<std::istream*>(userdata)->peek();
 }
-static void close_is(void* userdata)
+static int close_is(void* userdata)
 {
-	reinterpret_cast<std::istream*>(userdata)->close();
+	auto stream = reinterpret_cast<std::istream*>(userdata);
+	auto fstream = dynamic_cast<std::ifstream*>(stream);
+	if (fstream) {
+		fstream->close();
+	}
+	return 0;
 }
 
 static ubjw_context_t* ubjw_open_stream(std::ostream& outstream)
