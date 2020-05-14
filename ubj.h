@@ -224,12 +224,12 @@ static int close_is(void* userdata)
 	return 0;
 }
 
-static ubjw_context_t* ubjw_open_stream(std::ostream& outstream)
+extern inline ubjw_context_t* ubjw_open_stream(std::ostream& outstream)
 {
 	return ubjw_open_callback((void*)&outstream, write_os, close_os, NULL);
 }
 
-static ubjr_context_t* ubjr_open_stream(std::istream& instream)
+extern inline ubjr_context_t* ubjr_open_stream(std::istream& instream)
 {
 	return ubjr_open_callback((void*)&instream, read_is, peek_is, close_is, NULL);
 }
